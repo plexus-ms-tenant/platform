@@ -1,0 +1,55 @@
+plexus_tenant: plexus
+
+# Unprivileged user that owns app dirs and runs the deploy verb (via CI SSH).
+plexus_deploy_user: plexus
+plexus_deploy_root: /opt/stacks
+
+# Re-create containers during a deploy-playbook run (rotation — § 7.2 PLX) and
+# pull + start apps whose compose file the deploy verb has already placed. Safe
+# to leave true: an app never deployed yet is skipped, not fatal.
+plexus_up: true
+
+# Apps on this host — one record per app, the app's whole platform binding
+# (§ 7.1 PLX). The app's run shape (compose.yaml, env.schema) is NOT here: it
+# lives in the app's source repo and the deploy verb places it (§ 5.2 PLX).
+# App names are unique per tenant across every repo.
+#
+#   - name: my-app                          # unique per tenant
+#     repo: plexus-ms-tenant/web            # source repo (informative — where the app's code lives)
+#     domain: my-app.example.org            # ingress: TLS + route → port
+#     port: 3000                            # host port, unique per VM
+#     env:                                  # non-secret values → platform.env
+#       PUBLIC_URL: https://my-app.example.org
+#     secrets:                              # secret values → secrets.env (0600), resolved from the vault
+#       DATABASE_URL: "{{ lookup('community.general.onepassword', 'my-app-db', field='url', vault='plexus') }}"
+#
+#   - name: uptime                          # a third-party app: source repo is THIS repo, apps/uptime/
+#     repo: plexus-ms-tenant/platform
+#     domain: uptime.example.org
+#     port: 3001
+#     healthz: /api/status-page/heartbeat   # mirrors the app's plexus.healthz label, so the proxy fences it (§ 5.5 PLX)
+plexus_apps:
+  - name: website
+    repo: plexus-ms-tenant/web
+    domain: plexus-ms.org
+    port: 3000
+    secrets:
+      REVALIDATE_TOKEN: "{{ lookup('community.general.onepassword', 'website-revalidate', field='credential', vault='plexus') }}"
+
+# Base packages the host needs
+plexus_base_packages:
+  - ca-certificates
+  - curl
+  - gnupg
+  - python3-debian # required by deb822_repository module
+  - sudo
+  - ufw
+  - fail2ban
+  - unattended-upgrades
+  - acl
+
+# Secrets
+plexus_deploy_pubkey: "{{ lookup('env', 'DEPLOY_PUBKEY') | default('', true) }}"
+plexus_operator_pubkey: "{{ lookup('env', 'OPERATOR_PUBKEY') | default('', true) }}"
+plexus_ghcr_user: "{{ lookup('env', 'GHCR_USER') | default('', true) }}"
+plexus_ghcr_token: "{{ lookup('env', 'GHCR_TOKEN') | default('', true) }}"

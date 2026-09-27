@@ -1,0 +1,40 @@
+name: apps
+
+# Third-party apps hosted in this platform repo (§ 5.2, § 8.2 PLX): software
+# the tenant merely operates, declared as apps/<name>/{docker/compose.yaml,
+# env.schema,PLEXUS.md} with the image pinned in compose.yaml. On push to main,
+# `changes` runs the changed-apps verb (plain path diff — no workspace here)
+# and `app` fans the deploy verb over exactly the apps whose files changed.
+# Nothing is built: the image is someone else's. Managed by copier: edit the
+# preset (plexus-ms/preset-platform), never this file.
+#
+# The playbooks (provision.yml, deploy.yml) are NOT mounted on CI — they run
+# as root and are applied by an operator: `mise provision`, `mise deploy`.
+
+on:
+  push:
+    branches: [main]
+    paths: ['apps/**']
+
+permissions:
+  contents: read
+
+jobs:
+  changes:
+    uses: plexus-ms/ci-cd/.github/workflows/changes.yml@0.31.0
+
+  app:
+    needs: changes
+    # Empty matrix is an error, not a no-op — skip the job when nothing changed.
+    if: ${{ needs.changes.outputs.apps != '[]' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        app: ${{ fromJSON(needs.changes.outputs.apps) }}
+    uses: plexus-ms/ci-cd/.github/workflows/deploy.yml@0.31.0
+    with:
+      tenant: plexus
+      app: ${{ matrix.app }}
+      host: ${{ vars.DEPLOY_HOST }}
+    secrets:
+      ssh-key: ${{ secrets.DEPLOY_SSH_KEY }}

@@ -1,0 +1,74 @@
+# The tenant's platform repo (§ 3.6 PLX): the ops side, applied by playbook
+# runs on its own occasions — it rides no release train (§ 8.2 PLX). Third-party
+# apps the tenant merely operates live under apps/<name>/ (§ 5.2 PLX).
+
+# Verbs are asked as `mise :verb` at the repo root like in every tenant repo
+# (§ 4.1 PLX); that form needs the root marker even without sub-projects.
+monorepo_root = true
+
+[tools]
+hk = "latest" # Git hooks
+uv = "latest" # required for ansible and copier
+ansible = { version = "latest", uvx = true } # configuration management
+copier = { version = "latest", uvx = true } # template management
+
+[hooks]
+# Wire up Git hooks
+postinstall = "hk install --mise"
+
+
+# Platform verbs (§ 7 PLX) — the two playbooks, split by change cadence.
+
+[tasks.provision]
+depends = ["collections"]
+description = "Base host setup: apt, hardening, docker, caddy (fresh hosts and deep-reaching changes)"
+run = './ansible-playbookw provision.yml'
+
+[tasks.deploy]
+depends = ["collections"]
+description = "Everyday pass: ingress routes, app dirs, platform.env, secrets, container re-creation"
+run = './ansible-playbookw deploy.yml'
+
+
+# Contract verbs (§ 5.1 PLX) — every tenant repo answers them; the ones a
+# platform repo has no use for exist and pass as documented no-ops.
+
+[tasks.dev]
+description = "No-op: a platform repo has no development environment to start"
+run = 'echo "dev: nothing to start in a platform repo"'
+
+[tasks.build]
+description = "No-op: a platform repo produces no artifact; third-party apps pin published images"
+run = 'echo "build: nothing to build in a platform repo"'
+
+[tasks.check]
+depends = ["collections"]
+description = "Static checks: playbook syntax against the pinned collection"
+run = [
+    'ansible-playbook --syntax-check provision.yml',
+    'ansible-playbook --syntax-check deploy.yml',
+]
+
+[tasks.test]
+description = "No-op: a platform repo has no tests that gate a deploy"
+run = 'echo "test: nothing to test in a platform repo"'
+
+[tasks.verify]
+description = "Perform all steps that verify code quality"
+run = ['mise run check', 'mise run test']
+
+
+# Propagation tasks
+
+[tasks.sync]
+description = "Update the project to the latest template version with Copier"
+run = "copier update --trust"
+
+# Internal / hidden tasks
+
+[tasks.collections]
+description = "Install the pinned plexus.platform collection"
+hide = true
+run = 'ansible-galaxy collection install -r requirements.yml'
+sources = ["requirements.yml"]
+outputs = { auto = true }
