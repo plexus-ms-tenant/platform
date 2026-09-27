@@ -6,7 +6,7 @@ name: apps
 # `changes` runs the changed-apps verb (plain path diff — no workspace here)
 # and `app` fans the deploy verb over exactly the apps whose files changed.
 # Nothing is built: the image is someone else's. Managed by copier: edit the
-# preset (plexus-ms/preset-platform), never this file.
+# preset (plexus-ms/preset-repo-platform), never this file.
 #
 # The playbooks (provision.yml, deploy.yml) are NOT mounted on CI — they run
 # as root and are applied by an operator: `mise provision`, `mise deploy`.
