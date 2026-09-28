@@ -25,7 +25,9 @@ plexus_up: true
 #
 #   - name: uptime                          # a third-party app: source repo is THIS repo, apps/uptime/
 #     repo: plexus-ms-tenant/platform
-#     host: uptime.example.org
+#     host: ops.example.org
+#     path: /uptime                         # optional: served under ops.example.org/uptime/, prefix stripped;
+#                                           # apps sharing a host differ by path, at most one serves its root
 #     loopback_port: 3001
 #     healthz: /api/status-page/heartbeat   # mirrors the app's plexus.healthz label, so the proxy fences it (§ 5.5 PLX)
 plexus_apps:
