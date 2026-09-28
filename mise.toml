@@ -24,10 +24,10 @@ depends = ["collections"]
 description = "Base host setup: apt, hardening, docker, caddy (fresh hosts and deep-reaching changes)"
 run = './ansible-playbookw provision.yml'
 
-[tasks.deploy]
+[tasks.configure]
 depends = ["collections"]
-description = "Everyday pass: ingress routes, app dirs, platform.env, secrets, container re-creation"
-run = './ansible-playbookw deploy.yml'
+description = "Everyday pass: ingress routes, app dirs, .env, .env.secret, container re-creation"
+run = './ansible-playbookw configure.yml'
 
 
 # Contract verbs (§ 5.1 PLX) — every tenant repo answers them; the ones a
@@ -46,7 +46,7 @@ depends = ["collections"]
 description = "Static checks: playbook syntax against the pinned collection"
 run = [
     'ansible-playbook --syntax-check provision.yml',
-    'ansible-playbook --syntax-check deploy.yml',
+    'ansible-playbook --syntax-check configure.yml',
 ]
 
 [tasks.test]

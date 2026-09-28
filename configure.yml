@@ -1,0 +1,15 @@
+---
+# Configuration pass for the plexus operations platform — ingress
+# routes, app directories, .env, .env.secret, container re-creation.
+# Safe to re-run often; assumes provision.yml has already run on the host.
+# Not a deploy: deploying is the verb's act (§ 8.4 PLX); this playbook binds
+# apps to the host and hands them their environment (§ 7 PLX).
+#
+#   mise configure
+#
+- name: Configure the plexus operations platform
+  hosts: plexus
+  become: true
+  roles:
+    - plexus.platform.ingress
+    - plexus.platform.configure
