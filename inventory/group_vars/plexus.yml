@@ -59,3 +59,10 @@ plexus_ghcr_token: "{{ lookup('env', 'GHCR_TOKEN') | default('', true) }}"
 # The host is reached over the overlay as the person running the playbook;
 # the admin accounts come from the hypervisor's cloud-init.
 ansible_become: true
+
+# What sits in front of the host (host-level, § 7.1 PLX): the damage tenant's
+# ingress VM routes by SNI and announces the real peer with the PROXY protocol;
+# plexus-ms.org is Cloudflare-proxied, so the client address comes from
+# CF-Connecting-IP when the peer is one of Cloudflare's ranges.
+plexus_ingress_proxy_protocol_from: [10.10.0.0/24]
+plexus_ingress_trusted_proxies: cloudflare
