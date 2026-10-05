@@ -64,5 +64,5 @@ ansible_become: true
 # ingress VM routes by SNI and announces the real peer with the PROXY protocol;
 # plexus-ms.org is Cloudflare-proxied, so the client address comes from
 # CF-Connecting-IP when the peer is one of Cloudflare's ranges.
-plexus_ingress_proxy_protocol_from: [10.10.0.0/24]
-plexus_ingress_trusted_proxies: cloudflare
+configure_ingress_proxy_protocol_from: [10.10.0.0/24]
+configure_ingress_trusted_proxies: cloudflare

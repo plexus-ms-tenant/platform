@@ -11,5 +11,5 @@
   hosts: plexus
   become: true
   roles:
-    - plexus.platform.ingress
-    - plexus.platform.configure
+    - plexus.platform.configure_ingress
+    - plexus.platform.configure_apps

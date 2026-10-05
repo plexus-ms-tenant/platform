@@ -5,12 +5,12 @@
 #
 #   mise provision
 #
-# plexus.platform.alloy (opt-in observability agent) also belongs in this
+# plexus.platform.install_alloy (opt-in observability agent) also belongs in this
 # phase — append it here if this tenant enables it.
 - name: Provision the plexus operations platform
   hosts: plexus
   become: true
   roles:
     - plexus.platform.base
-    - plexus.platform.docker
-    - plexus.platform.caddy
+    - plexus.platform.install_docker
+    - plexus.platform.install_caddy

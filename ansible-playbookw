@@ -12,6 +12,6 @@ else
   SECRETS_ARG=""
 fi
 
-op run --no-masking $SECRETS_ARG --env-file ./globals.env -- \
+op run --no-masking $SECRETS_ARG -- \
   ansible-playbook \
   "./$playbook" "$@"
