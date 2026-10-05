@@ -1,16 +1,28 @@
 ---
-# Base host setup for the plexus operations platform — apt repos,
-# packages, hardening, container engine, ingress-server install. Rarely
-# re-run: fresh hosts and deep-reaching changes only.
+# Base host setup for the plexus operations platform — packages,
+# admins, hardening, container engine, ingress-server install, firewall.
+# Rarely re-run: fresh hosts and deep-reaching changes only.
 #
 #   mise provision
 #
-# plexus.platform.install_alloy (opt-in observability agent) also belongs in this
-# phase — append it here if this tenant enables it.
+# A fresh host is reached as root once (`mise provision -- -u root`), which
+# creates the admins; every later run connects as an admin, and the first of
+# those closes root logins.
+#
+# Opt-in roles that also belong in this phase — add them before
+# configure_firewall if this tenant uses them:
+# plexus.platform.configure_hostname, .install_and_join_netbird (overlay
+# network), .configure_mail (local mail to a mailbox), .install_alloy
+# (observability agent).
 - name: Provision the plexus operations platform
   hosts: plexus
   become: true
   roles:
-    - plexus.platform.base
+    - plexus.platform.configure_base
+    - plexus.platform.configure_iam
+    - plexus.platform.configure_unattended_upgrades
+    - plexus.platform.configure_deploy_user
     - plexus.platform.install_docker
     - plexus.platform.install_caddy
+    - plexus.platform.configure_firewall # after the roles that open ports in it
+    - plexus.platform.configure_sshd     # last: closes root logins once an admin has logged in

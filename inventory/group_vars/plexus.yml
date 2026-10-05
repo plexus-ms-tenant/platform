@@ -38,26 +38,31 @@ plexus_apps:
     secrets:
       REVALIDATE_TOKEN: op://plexus/website-revalidate/credential
 
-# Base packages the host needs
-plexus_base_packages:
-  - ca-certificates
-  - curl
-  - gnupg
-  - python3-debian # required by deb822_repository module
-  - sudo
-  - ufw
-  - fail2ban
-  - unattended-upgrades
-  - acl
+# Human admins: a personal account on the host, key-only SSH, passwordless
+# sudo (configure_iam). The same people as on the damage tenant's hosts, whose
+# hypervisor created the first of these accounts through cloud-init.
+configure_iam_admins:
+  - name: albers
+    ssh_keys:
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJ1CR0Z5gyKQjKEQB7ysXleZPVSkHercNNiSx66ZGMpc albers@damage.ms
+
+# Host firewall (configure_firewall): inbound closed except SSH and what the
+# roles open themselves (install_caddy: 80, 443); the NetBird overlay is
+# accepted whole.
+configure_firewall_trusted_interfaces: [wt0]
+
+# The guest image admits SSH logins from the groups sudo and ssh-users only.
+configure_deploy_user_groups: [ssh-users]
+
+# A stateless host: reboot by itself at night when an upgrade asks for it.
+configure_unattended_upgrades_automatic_reboot: true
 
 # Secrets
 plexus_deploy_pubkey: "{{ lookup('env', 'DEPLOY_PUBKEY') | default('', true) }}"
-plexus_operator_pubkey: "{{ lookup('env', 'OPERATOR_PUBKEY') | default('', true) }}"
 plexus_ghcr_user: "{{ lookup('env', 'GHCR_USER') | default('', true) }}"
 plexus_ghcr_token: "{{ lookup('env', 'GHCR_TOKEN') | default('', true) }}"
 
-# The host is reached over the overlay as the person running the playbook;
-# the admin accounts come from the hypervisor's cloud-init.
+# The host is reached over the overlay as the person running the playbook.
 ansible_become: true
 
 # What sits in front of the host (host-level, § 7.1 PLX): the damage tenant's
