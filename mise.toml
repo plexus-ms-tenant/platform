@@ -30,6 +30,7 @@ description = "Everyday pass: ingress routes, app dirs, .env, .env.secret, conta
 run = './ansible-playbookw configure.yml'
 
 
+
 # Contract verbs (§ 5.1 PLX) — every tenant repo answers them; the ones a
 # platform repo has no use for exist and pass as documented no-ops.
 

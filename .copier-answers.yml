@@ -1,7 +1,7 @@
 # Maintained by Copier — NEVER EDIT MANUALLY.
-_commit: 0.38.0
+_commit: 0.39.0
 _src_path: gh:plexus-ms/preset-repo-platform
 github_org: plexus-ms-tenant
+hosting: false
 tenant: plexus
 
-hosting: false
