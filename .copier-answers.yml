@@ -4,3 +4,4 @@ _src_path: gh:plexus-ms/preset-repo-platform
 github_org: plexus-ms-tenant
 tenant: plexus
 
+hosting: false
