@@ -51,9 +51,6 @@ configure_iam_admins:
 # accepted whole.
 configure_firewall_trusted_interfaces: [wt0]
 
-# The guest image admits SSH logins from the groups sudo and ssh-users only.
-configure_deploy_user_groups: [ssh-users]
-
 # A stateless host: reboot by itself at night when an upgrade asks for it.
 configure_unattended_upgrades_automatic_reboot: true
 
