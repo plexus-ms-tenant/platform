@@ -4,14 +4,14 @@ plexus_tenant: plexus
 plexus_deploy_user: plexus
 plexus_deploy_root: /opt/stacks
 
-# Re-create containers during a configure-playbook run (rotation — § 7.2 PLX)
+# Re-create containers during a configure-playbook run (rotation — PLX-Secrets)
 # and pull + start apps whose compose file the deploy verb has already placed.
 # Safe to leave true: an app never deployed yet is skipped, not fatal.
 plexus_up: true
 
 # Apps on this host — one record per app, the app's whole platform binding
-# (§ 7.1 PLX). The app's run shape (compose.yaml) is NOT here: it lives in the
-# app's source repo and the deploy verb renders it onto the host (§ 5.2 PLX).
+# (§ 3 PLX-Platform). The app's run shape (compose.yaml) is NOT here: it lives in the
+# app's source repo and the deploy verb renders it onto the host (§ 2 PLX-App).
 # App names are unique per tenant across every repo.
 #
 #   - name: my-app                          # unique per tenant
@@ -29,7 +29,7 @@ plexus_up: true
 #     path: /uptime                         # optional: served under ops.example.org/uptime/, prefix stripped;
 #                                           # apps sharing a host differ by path, at most one serves its root
 #     loopback_port: 3001
-#     healthz: /api/status-page/heartbeat   # mirrors the app's plexus.healthz label, so the proxy fences it (§ 5.5 PLX)
+#     healthz: /api/status-page/heartbeat   # mirrors the app's plexus.healthz label, so the proxy fences it (§ 5 PLX-App)
 plexus_apps:
   - name: website
     repo: plexus-ms-tenant/web
