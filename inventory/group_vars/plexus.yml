@@ -9,6 +9,12 @@ plexus_deploy_root: /opt/stacks
 # Safe to leave true: an app never deployed yet is skipped, not fatal.
 plexus_up: true
 
+# Where the deploy verb reaches a VM, ssh://<deploy user>@<address>[:<port>];
+# set per VM in host_vars next to its plexus_apps, so each third-party app
+# deploys to the VM that runs it (§ 3 PLX-Platform). Unset, the repo's
+# DEPLOY_HOST variable serves every app.
+# plexus_deploy_target: ssh://plexus@203.0.113.10:2201
+
 # Apps on this host — one record per app, the app's whole platform binding
 # (§ 3 PLX-Platform). The app's run shape (compose.yaml) is NOT here: it lives in the
 # app's source repo and the deploy verb renders it onto the host (§ 2 PLX-App).
