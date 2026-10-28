@@ -1,5 +1,5 @@
 ---
-plexus: 0.63.0
+plexus: 0.64.0
 modules: [PLX-Repo, PLX-Tenancy, PLX-Platform, PLX-Ingress, PLX-Secrets, PLX-Updates]
 ---
 

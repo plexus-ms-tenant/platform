@@ -1,0 +1,20 @@
+name: verify
+
+# Mounts the verify verb on every push (§ 2 PLX-Delivery): playbook syntax
+# against the pinned collection. Managed by copier: edit the preset
+# (plexus-ms/preset-repo-platform), never this file.
+
+on:
+  push:
+
+permissions:
+  contents: read
+
+# Where the jobs run: the CI_RUNNER repo variable is the runner label, unset
+# for GitHub's runners.
+jobs:
+  verify:
+    uses: plexus-ms/ci-cd/.github/workflows/_verify.yml@0.64.0
+    with:
+      runner: ${{ vars.CI_RUNNER || 'ubuntu-latest' }}
+

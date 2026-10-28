@@ -1,0 +1,54 @@
+name: deploy
+
+# Mounts the deploy verb for the third-party apps hosted in this platform repo
+# (§ 2 PLX-App, §§ 3 and 6 PLX-Delivery): software the tenant merely operates,
+# declared as apps/<name>/{docker/compose.yaml, PLEXUS.md} with the image
+# pinned in compose.yaml. On push to main, `changed-apps` emits exactly the
+# apps whose files changed (a plain path diff — no workspace here) and
+# `deploy` fans the verb over them. Nothing is released: the image is someone
+# else's. Managed by copier: edit the preset (plexus-ms/preset-repo-platform),
+# never this file.
+#
+# The playbooks (provision.yml, configure.yml) are NOT mounted on CI — they
+# run as root and are applied by an operator: `mise provision`, `mise configure`.
+
+on:
+  push:
+    branches: [main]
+    paths: ['apps/**']
+
+permissions:
+  contents: read
+
+# Where the jobs run: see verify.yml.
+jobs:
+  changed-apps:
+    uses: plexus-ms/ci-cd/.github/workflows/_changed-apps.yml@0.64.0
+    with:
+      runner: ${{ vars.CI_RUNNER || 'ubuntu-latest' }}
+
+  # Where each app deploys: the plexus_deploy_target of the inventory file
+  # that declares it (§ 3 PLX-Platform); an app without one falls back to the
+  # DEPLOY_HOST variable.
+  deploy-targets:
+    uses: plexus-ms/ci-cd/.github/workflows/_deploy-targets.yml@0.64.0
+    with:
+      runner: ${{ vars.CI_RUNNER || 'ubuntu-latest' }}
+
+  deploy:
+    needs: [changed-apps, deploy-targets]
+    # Empty matrix is an error, not a no-op — skip the job when nothing changed.
+    if: ${{ needs.changed-apps.outputs.apps != '[]' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        app: ${{ fromJSON(needs.changed-apps.outputs.apps) }}
+    uses: plexus-ms/ci-cd/.github/workflows/_deploy.yml@0.64.0
+    with:
+      tenant: plexus
+      app: ${{ matrix.app }}
+      host: ${{ fromJSON(needs.deploy-targets.outputs.map)[matrix.app] || vars.DEPLOY_HOST }}
+      runner: ${{ vars.CI_RUNNER || 'ubuntu-latest' }}
+    secrets:
+      ssh-key: ${{ secrets.DEPLOY_SSH_KEY }}
+

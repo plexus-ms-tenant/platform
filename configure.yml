@@ -2,7 +2,7 @@
 # Configuration pass for the plexus operations platform — ingress
 # routes, secrets, app directories, .env, container re-creation.
 # Safe to re-run often; assumes provision.yml has already run on the host.
-# Not a deploy: deploying is the verb's act (PLX-Deploy); this playbook binds
+# Not a deploy: deploying is the verb's act (§ 6 PLX-Delivery); this playbook binds
 # apps to the host and hands them their environment (PLX-Platform).
 #
 #   mise configure

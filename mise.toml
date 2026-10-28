@@ -1,5 +1,5 @@
 # The tenant's platform repo (§ 3 PLX-Tenancy): the ops side, applied by playbook
-# runs on its own occasions — it has no release cycle (§ 2 PLX-Release). Third-party
+# runs on its own occasions — it has no release cycle (§ 3 PLX-Delivery). Third-party
 # apps the tenant merely operates live under apps/<name>/ (§ 2 PLX-App).
 
 # Verbs are asked as `mise :verb` at the repo root like in every tenant repo
