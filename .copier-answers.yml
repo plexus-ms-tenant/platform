@@ -5,3 +5,4 @@ github_org: plexus-ms-tenant
 infrastructure: false
 tenant: plexus
 
+renovate_reviewers: davidjalbers
