@@ -14,7 +14,7 @@ permissions:
 # for GitHub's runners.
 jobs:
   verify:
-    uses: plexus-ms/ci-cd/.github/workflows/_verify.yml@0.71.0
+    uses: plexus-ms/ci-cd/.github/workflows/_verify.yml@0.72.0
     with:
       runner: ${{ vars.CI_RUNNER || 'ubuntu-latest' }}
 
