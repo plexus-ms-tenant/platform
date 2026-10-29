@@ -10,11 +10,15 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: verify-${{ github.ref }}
+  cancel-in-progress: true
+
 # Where the jobs run: the CI_RUNNER repo variable is the runner label, unset
 # for GitHub's runners.
 jobs:
   verify:
-    uses: plexus-ms/ci-cd/.github/workflows/_verify.yml@0.75.0
+    uses: plexus-ms/ci-cd/.github/workflows/_verify.yml@0.76.0
     with:
       runner: ${{ vars.CI_RUNNER || 'ubuntu-latest' }}
 
