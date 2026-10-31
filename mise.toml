@@ -16,8 +16,9 @@ ansible = { version = "latest", uvx = true } # configuration management
 copier = { version = "latest", uvx = true } # template management
 # plx: the ops verbs the reusable workflows mount — changed-apps, deploy-targets, deploy
 # (§ 3 PLX-Delivery). The initiative's own package, published from
-# plexus-ms/packages with provenance and bumped by the update bot; the
+# plexus-ms/primitives with provenance and bumped by the update bot; the
 # trust-policy approval only waives npm's young-package heuristics.
+# The pin is the train's to write, never the update bot's (§ 1 PLX-Updates).
 "npm:@plexus-ms/cli" = { version = "0.100.0", allow_low_downloads = true }
 
 [hooks]
