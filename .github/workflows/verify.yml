@@ -1,11 +1,18 @@
 name: verify
 
-# Mounts the verify verb on every push (§ 2 PLX-Delivery): playbook syntax
-# against the pinned collection. Managed by copier: edit the preset
+# Mounts the verify verb (§ 2 PLX-Delivery): playbook syntax against the
+# pinned collection, on every pull request and on every push to `main`, the
+# trunk that takes an operator's direct pushes. A push to any other branch
+# starts nothing until it has a pull request, and a change to nothing but
+# Markdown starts nothing at all. Managed by copier: edit the preset
 # (plexus-ms/preset-repo-platform), never this file.
 
 on:
+  pull_request:
+    paths-ignore: ['**/*.md']
   push:
+    branches: [main]
+    paths-ignore: ['**/*.md']
 
 permissions:
   contents: read
@@ -18,7 +25,7 @@ concurrency:
 # for GitHub's runners.
 jobs:
   verify:
-    uses: plexus-ms/primitives/.github/workflows/_verify.yml@0.102.0
+    uses: plexus-ms/primitives/.github/workflows/_verify.yml@0.103.0
     with:
       runner: ${{ vars.CI_RUNNER || 'ubuntu-latest' }}
 
