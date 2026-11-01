@@ -19,7 +19,7 @@ copier = { version = "latest", uvx = true } # template management
 # plexus-ms/primitives with provenance and bumped by the update bot; the
 # trust-policy approval only waives npm's young-package heuristics.
 # The pin is the train's to write, never the update bot's (§ 1 PLX-Updates).
-"npm:@plexus-ms/cli" = { version = "0.103.0", allow_low_downloads = true }
+"npm:@plexus-ms/cli" = { version = "0.104.0", allow_low_downloads = true }
 
 [hooks]
 # Wire up Git hooks
